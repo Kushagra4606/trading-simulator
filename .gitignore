@@ -1,3 +1,20 @@
+# Java
+backend/target/
+*.class
+*.jar
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Env files
+.env
+*.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
 # Compiled class file
 *.class
 
