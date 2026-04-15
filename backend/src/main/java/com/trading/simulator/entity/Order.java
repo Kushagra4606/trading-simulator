@@ -48,6 +48,9 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private boolean isBot = false;
+
     private LocalDateTime updatedAt;
 
     // Enums defined as inner enums or separate files

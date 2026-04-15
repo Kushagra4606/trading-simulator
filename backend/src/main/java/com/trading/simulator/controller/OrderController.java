@@ -23,7 +23,7 @@ public class OrderController {
             @RequestHeader("Authorization") String authHeader,
             @Valid @RequestBody PlaceOrderRequest req) {
         Long userId = extractUserId(authHeader);
-        return ResponseEntity.ok(orderService.placeOrder(userId, req));
+        return ResponseEntity.ok(orderService.placeOrder(userId, req, false));
     }
 
     @GetMapping

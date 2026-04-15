@@ -34,6 +34,10 @@ public class StockService {
                 redisTemplate.opsForValue().set(key, stock.getBasePrice().toString());
             }
         }
+        stocks.forEach(stock ->
+                redisTemplate.opsForValue().set("SENTIMENT:" + stock.getSymbol(), "0.0")
+        );
+        log.info("[Seeder] Sentiment scores initialized to neutral (0.0) for all stocks");
         log.info("LTP seeding complete. {} stocks loaded into Redis.", stocks.size());
     }
 

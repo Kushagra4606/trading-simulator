@@ -23,7 +23,7 @@ public class OrderService {
     private final StockService stockService;
 
     @Transactional
-    public Order placeOrder(Long userId, PlaceOrderRequest req) {
+    public Order placeOrder(Long userId, PlaceOrderRequest req, boolean isBot) {
 
         // Determine execution price
         BigDecimal price;
@@ -35,12 +35,13 @@ public class OrderService {
         }
 
         // Validate
-        if (req.getSide() == Order.OrderSide.BUY) {
-            validateAndDeductWalletForBuy(userId, price, req.getQuantity());
-        } else {
-            validateHoldingsForSell(userId, req.getSymbol(), req.getQuantity());
+        if(!isBot) {
+            if (req.getSide() == Order.OrderSide.BUY) {
+                validateAndDeductWalletForBuy(userId, price, req.getQuantity());
+            } else {
+                validateHoldingsForSell(userId, req.getSymbol(), req.getQuantity());
+            }
         }
-
         // Persist order
         Order order = Order.builder()
                 .userId(userId)
@@ -51,6 +52,7 @@ public class OrderService {
                 .quantity(req.getQuantity())
                 .filledQuantity(0)
                 .status(Order.OrderStatus.PENDING)
+                .isBot(isBot)
                 .createdAt(LocalDateTime.now())
                 .build();
         order = orderRepository.save(order);
@@ -85,7 +87,7 @@ public class OrderService {
     private void validateHoldingsForSell(Long userId, String symbol, int qty) {
         Holding holding = holdingRepository.findByUserIdAndSymbol(userId, symbol)
                 .orElseThrow(() -> new RuntimeException("No holdings for " + symbol));
-        if (holding.getQuantity() < qty) {
+        if (holding.getQuantity() < qty ) {
             throw new RuntimeException("Insufficient shares. You own: "
                     + holding.getQuantity() + ", trying to sell: " + qty);
         }
