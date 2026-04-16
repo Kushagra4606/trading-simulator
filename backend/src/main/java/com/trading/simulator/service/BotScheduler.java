@@ -110,7 +110,7 @@ public class BotScheduler {
         }
     }
 
-    
+
 
     private List<String> getAllSymbols() {
         return stockRepository.findAll()

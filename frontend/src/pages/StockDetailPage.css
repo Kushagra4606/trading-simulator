@@ -1,0 +1,147 @@
+.stock-detail-page {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: var(--text-primary);
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.stock-title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+}
+
+.stock-subtitle {
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+  font-size: 16px;
+}
+
+.price-container {
+  text-align: right;
+}
+
+.live-price {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: -1px;
+}
+
+.price-label {
+  color: var(--text-muted);
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.live-indicator {
+  color: var(--color-profit);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-profit);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 32px 0;
+}
+
+.trade-btn {
+  padding: 14px 40px;
+  background-color: var(--color-profit);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.1s ease, background-color 0.2s;
+  margin-bottom: 32px;
+}
+
+.trade-btn:hover {
+  background-color: #059669; /* darker emerald */
+  transform: translateY(-1px);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.info-card {
+  background-color: var(--bg-secondary);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.info-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+
+.text-profit { color: var(--color-profit); }
+.text-loss { color: var(--color-loss); }

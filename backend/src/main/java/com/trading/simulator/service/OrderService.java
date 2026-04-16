@@ -28,8 +28,14 @@ public class OrderService {
         // Determine execution price
         BigDecimal price;
         if (req.getOrderType() == Order.OrderType.MARKET) {
-            // For market orders, use current LTP as the price
-            price = stockService.getLtpAsBigDecimal(req.getSymbol());
+            BigDecimal currentLtp = stockService.getLtpAsBigDecimal(req.getSymbol());
+            if (req.getSide() == Order.OrderSide.BUY) {
+                // cross the spread: 5% higher
+                price = currentLtp.multiply(BigDecimal.valueOf(1.05)).setScale(2, java.math.RoundingMode.HALF_UP);
+            } else {
+                // cross the spread: 5% lower
+                price = currentLtp.multiply(BigDecimal.valueOf(0.95)).setScale(2, java.math.RoundingMode.HALF_UP);
+            }
         } else {
             price = req.getPrice();
         }

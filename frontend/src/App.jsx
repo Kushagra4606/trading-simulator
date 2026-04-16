@@ -11,6 +11,7 @@ import useWebSocketStore from './store/useWebSocketStore';
 import useAuthStore from './store/authStore'; 
 import NotificationToast from './components/NotificationToast';
 import { useEffect } from 'react';
+import './App.css';
 
 export default function App() {
   const token = useAuthStore((s) => s.token);

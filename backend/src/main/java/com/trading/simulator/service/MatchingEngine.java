@@ -61,9 +61,12 @@ public class MatchingEngine {
             int  sellQty     = Integer.parseInt(askParts[2]);
 
             // Execution price = price of the resting order (the one placed first)
-            // Simple rule: use ask price (seller's price)
-            BigDecimal execPrice = BigDecimal.valueOf(askPrice)
-                    .setScale(2, RoundingMode.HALF_UP);
+            BigDecimal execPrice;
+            if (buyOrderId < sellOrderId) {
+                execPrice = BigDecimal.valueOf(bidPrice).setScale(2, RoundingMode.HALF_UP);
+            } else {
+                execPrice = BigDecimal.valueOf(askPrice).setScale(2, RoundingMode.HALF_UP);
+            }
 
             // How many shares can be traded?
             int tradedQty = Math.min(buyQty, sellQty);
