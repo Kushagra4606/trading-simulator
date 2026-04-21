@@ -1,21 +1,16 @@
 import axios from 'axios';
-import useAuthStore from '../store/authStore';
+
 const API = 'http://localhost:8080/api';
 
 
-const getHeaders = () => ({
-  headers: { Authorization: `Bearer ${useAuthStore.getState().token}` }
-});
-
-
 export const placeOrder = (orderData) =>
-  axios.post(`${API}/orders`, orderData, getHeaders());
+  axios.post(`${API}/orders`, orderData);
 
 export const getMyOrders = () =>
-  axios.get(`${API}/orders`, getHeaders());
+  axios.get(`${API}/orders`);
 
 export const cancelOrder = (orderId) =>
-  axios.delete(`${API}/orders/${orderId}`, getHeaders());
+  axios.delete(`${API}/orders/${orderId}`);
 
 export const getHoldings = () =>
-  axios.get(`${API}/portfolio/holdings`, getHeaders());
+  axios.get(`${API}/portfolio/holdings`);
