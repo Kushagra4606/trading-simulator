@@ -40,6 +40,17 @@ public class OrderService {
             price = req.getPrice();
         }
 
+        if (isBot) {
+            BigDecimal ltp = stockService.getLtpAsBigDecimal(req.getSymbol());
+            BigDecimal upperLimit = ltp.multiply(BigDecimal.valueOf(1.15))
+                    .setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal lowerLimit = ltp.multiply(BigDecimal.valueOf(0.85))
+                    .setScale(2, java.math.RoundingMode.HALF_UP);
+            if (price.compareTo(upperLimit) > 0 || price.compareTo(lowerLimit) < 0) {
+                throw new RuntimeException("Circuit breaker triggered for " + req.getSymbol());
+            }
+        }
+
         // Validate
         if(!isBot) {
             if (req.getSide() == Order.OrderSide.BUY) {

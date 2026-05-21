@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigDecimal;
+import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,7 +30,6 @@ public class StockService {
         List<Stock> stocks = stockRepository.findAll();
         for (Stock stock : stocks) {
             String key = LTP_PREFIX + stock.getSymbol();
-            // Only seed if not already present (so restarts don't reset live prices)
             if (Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
                 redisTemplate.opsForValue().set(key, stock.getBasePrice().toString());
             }
@@ -37,7 +37,16 @@ public class StockService {
         stocks.forEach(stock ->
                 redisTemplate.opsForValue().set("SENTIMENT:" + stock.getSymbol(), "0.0")
         );
-        log.info("[Seeder] Sentiment scores initialized to neutral (0.0) for all stocks");
+
+        // ── Flush stale order book on every restart ──────────────────────────
+        Set<String> buyKeys  = redisTemplate.keys("ORDERBOOK:BUY:*");
+        Set<String> sellKeys = redisTemplate.keys("ORDERBOOK:SELL:*");
+        if (buyKeys  != null && !buyKeys.isEmpty())  redisTemplate.delete(buyKeys);
+        if (sellKeys != null && !sellKeys.isEmpty()) redisTemplate.delete(sellKeys);
+        log.info("Flushed stale order book from Redis. BUY keys: {}, SELL keys: {}",
+                buyKeys == null ? 0 : buyKeys.size(),
+                sellKeys == null ? 0 : sellKeys.size());
+
         log.info("LTP seeding complete. {} stocks loaded into Redis.", stocks.size());
     }
 
@@ -61,7 +70,4 @@ public class StockService {
         return new BigDecimal(val);
     }
 
-    public void updateLtp(String symbol, String price) {
-        redisTemplate.opsForValue().set(LTP_PREFIX + symbol.toUpperCase(), price);
-    }
 }

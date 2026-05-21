@@ -5,6 +5,7 @@ import OrderModal from '../components/OrderModal';
 import useAuthStore from '../store/authStore';
 import useWebSocketStore from '../store/useWebSocketStore';
 import './StockDetailPage.css';
+import CandleChart from '../components/CandleChart';
 
 export default function StockDetailPage() {
   const { symbol } = useParams();
@@ -55,6 +56,9 @@ export default function StockDetailPage() {
               </span>
             )}
           </div>
+        </div>
+        <div className="chart-container">
+          <CandleChart symbol={symbol} />
         </div>
       </div>
 

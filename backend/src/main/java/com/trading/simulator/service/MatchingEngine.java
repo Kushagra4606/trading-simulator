@@ -94,8 +94,8 @@ public class MatchingEngine {
             updateOrderAfterMatch(sellOrderId, tradedQty);
             publishLtpUpdate(symbol, execPrice.doubleValue());
             // Publish fill notifications to both users
-            publishOrderFill(orderRepository.findById(buyOrderId).orElseThrow());
-            publishOrderFill(orderRepository.findById(sellOrderId).orElseThrow());
+            orderRepository.findById(buyOrderId).ifPresent(this::publishOrderFill);
+            orderRepository.findById(sellOrderId).ifPresent(this::publishOrderFill);
 
             // 4. Update wallet of SELLER (credit proceeds)
             BigDecimal proceeds = execPrice.multiply(BigDecimal.valueOf(tradedQty));
@@ -130,7 +130,11 @@ public class MatchingEngine {
     }
 
     private void updateOrderAfterMatch(Long orderId, int tradedQty) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            log.warn("Order {} not found in DB — skipping", orderId);
+            return;
+        }
         int newFilled = order.getFilledQuantity() + tradedQty;
         order.setFilledQuantity(newFilled);
         order.setUpdatedAt(LocalDateTime.now());
@@ -143,7 +147,11 @@ public class MatchingEngine {
     }
 
     private void creditWallet(Long userId, BigDecimal amount) {
-        Wallet wallet = walletRepository.findByUserId(userId).orElseThrow();
+        Wallet wallet = walletRepository.findByUserId(userId).orElse(null);
+        if (wallet == null) {
+            log.warn("Wallet not found for user {} — skipping credit", userId);
+            return;
+        }
         wallet.setBalance(wallet.getBalance().add(amount));
         walletRepository.save(wallet);
     }
