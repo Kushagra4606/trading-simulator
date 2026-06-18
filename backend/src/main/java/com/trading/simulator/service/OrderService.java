@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.annotation.Backoff;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ public class OrderService {
     private final MatchingEngine matchingEngine;
     private final StockService stockService;
 
+    @Retryable(
+            retryFor = {org.springframework.dao.CannotAcquireLockException.class,
+                    org.springframework.dao.PessimisticLockingFailureException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 50, multiplier = 2)
+    )
     @Transactional
     public Order placeOrder(Long userId, PlaceOrderRequest req, boolean isBot) {
 

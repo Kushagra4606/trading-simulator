@@ -158,7 +158,7 @@ public class MatchingEngine {
 
     private void updateHoldingOnBuy(Long userId, String symbol,
                                     int qty, BigDecimal price) {
-        holdingRepository.findByUserIdAndSymbol(userId, symbol)
+        holdingRepository.findByUserIdAndSymbolForUpdate(userId, symbol)
                 .ifPresentOrElse(holding -> {
                     // Recalculate weighted average buy price
                     BigDecimal totalCost = holding.getAvgBuyPrice()
@@ -179,7 +179,7 @@ public class MatchingEngine {
     }
 
     private void updateHoldingOnSell(Long userId, String symbol, int qty) {
-        holdingRepository.findByUserIdAndSymbol(userId, symbol)
+        holdingRepository.findByUserIdAndSymbolForUpdate(userId, symbol)
                 .ifPresent(holding -> {
                     int newQty = holding.getQuantity() - qty;
                     if (newQty <= 0) {

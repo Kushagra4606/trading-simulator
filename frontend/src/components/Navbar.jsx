@@ -32,7 +32,7 @@ export default function Navbar() {
           <path d="M19 9L14 14L10 10L4 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M19 9V14H14" stroke="currentColor" fill="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        TradeSim
+        TradeVerse
       </div>
 
       <div className="nav-links">

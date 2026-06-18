@@ -31,4 +31,7 @@ public class Stock {
 
     @Column(nullable = false)
     private Double circuitLimitPercent; // e.g. 10.0 means ±10%
+
+    @Column(nullable = false, precision = 4, scale = 3)
+    private java.math.BigDecimal volatility = new java.math.BigDecimal("0.020"); // base daily volatility e.g. 0.02 = 2%
 }
