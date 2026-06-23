@@ -7,6 +7,7 @@ const useWebSocketStore = create((set, get) => ({
   connected: false,
   ltpMap: {},           // { SYMBOL: price }
   notifications: [],    // order fill alerts
+  newsEvents: [],
 
   connect: (token) => {
     const client = new Client({
@@ -65,6 +66,18 @@ const useWebSocketStore = create((set, get) => ({
 
     return sub; // caller must call sub.unsubscribe() on cleanup
   },
+
+  subscribeNews: () => {
+  const { client } = get();
+  if (!client || !client.connected) return null;
+  const sub = client.subscribe('/topic/news', (message) => {
+    const event = JSON.parse(message.body);
+    set((state) => ({
+      newsEvents: [event, ...state.newsEvents].slice(0, 50),
+    }));
+  });
+  return sub;
+},
 
   clearNotifications: () => set({ notifications: [] }),
 }));
